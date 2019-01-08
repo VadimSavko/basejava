@@ -3,63 +3,54 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int storageSize = 0;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++)
-            if (storage[i] == null)
-                break;
-            else
-                storage[i] = null;
+        for (int i = 0; i < storageSize; i++) {
+            storage[i] = null;
+        }
     }
 
     void save(Resume r) {
-        if (r != null)
-            for (int i = 0; i < storage.length; i++) {
-                if (storage[i] != null)
-                    if (storage[i].uuid.equals(r.uuid))
-                        break;
-
-                if (storage[i] == null) {
-                    storage[i] = r;
-                    break;
+        if (r != null) {
+            for (int i = 0; i < storageSize; i++) {
+                if (storage[i].uuid.equals(r.uuid)) {
+                    return;
                 }
             }
 
+            if (storageSize < storage.length) {
+                storage[storageSize] = r;
+                storageSize++;
+            }
+        }
     }
 
     Resume get(String uuid) {
-        int index = -1;
-
-        for (int i = 0; i < storage.length; i++)
-            if (storage[i] == null) {
-                break;
-            } else if (storage[i].uuid.equals(uuid)) {
-                index = i;
-                break;
+        for (int i = 0; i < storageSize; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
             }
-
-        if (index != -1)
-            return storage[index];
-        else
-            return null;
+        }
+        return null;
     }
 
     void delete(String uuid) {
-        boolean found = false;
+        int index = -1;
 
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null)
+        for (int i = 0; i < storageSize; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                index = i;
                 break;
-
-            if (!found)
-                found = storage[i].uuid.equals(uuid);
-
-            if (found) {
-                if (i == (storage.length - 1))
-                    storage[i] = null;
-                else
-                    storage[i] = storage[i + 1];
             }
+        }
+
+        if (index >= 0) {
+            for (int i = index; i < (storageSize - 1); i++) {
+                storage[i] = storage[i + 1];
+            }
+            storage[storageSize - 1] = null;
+            storageSize--;
         }
     }
 
@@ -67,24 +58,15 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int size = size();
-        Resume[] result = new Resume[size];
+        Resume[] result = new Resume[storageSize];
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < storageSize; i++)
             result[i] = storage[i];
 
         return result;
     }
 
     int size() {
-        int count = 0;
-
-        for (Resume r : storage)
-            if (r == null)
-                break;
-            else
-                count++;
-
-        return count;
+        return storageSize;
     }
 }
