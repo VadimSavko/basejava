@@ -9,6 +9,7 @@ public class ArrayStorage {
         for (int i = 0; i < storageSize; i++) {
             storage[i] = null;
         }
+        storageSize = 0;
     }
 
     void save(Resume r) {
@@ -60,8 +61,9 @@ public class ArrayStorage {
     Resume[] getAll() {
         Resume[] result = new Resume[storageSize];
 
-        for (int i = 0; i < storageSize; i++)
+        for (int i = 0; i < storageSize; i++) {
             result[i] = storage[i];
+        }
 
         return result;
     }
